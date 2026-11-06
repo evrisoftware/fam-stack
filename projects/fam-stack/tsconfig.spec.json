@@ -1,0 +1,21 @@
+/* Specs import the entry points by package name, as the app does. */
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/spec",
+    "types": [
+      "vitest/globals"
+    ],
+    "paths": {
+      "fam-stack": ["./src/public-api.ts"],
+      "fam-stack/*": ["./*/public-api.ts"]
+    }
+  },
+  "files": [
+    "test-setup.ts"
+  ],
+  "include": [
+    "**/*.spec.ts",
+    "**/*.d.ts"
+  ]
+}

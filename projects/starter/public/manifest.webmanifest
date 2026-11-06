@@ -1,0 +1,20 @@
+{
+  "name": "fam-stack starter",
+  "short_name": "Starter",
+  "description": "A Firebase + Angular + Material app built on fam-stack.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "lang": "en",
+  "background_color": "#F2F4F5",
+  "theme_color": "#006A6A",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

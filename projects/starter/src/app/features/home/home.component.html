@@ -1,0 +1,44 @@
+<fam-load-status [busy]="tasks.isLoading()" loading="Loading the summary…" ready="Summary ready."/>
+
+<div [attr.aria-busy]="tasks.isLoading()" class="fam-page home">
+  @if (auth.currentUser(); as user) {
+    <p class="home__greeting">Hi, {{ user.email | emailName }}.</p>
+  }
+
+  @if (tasks.isLoading()) {
+    <div aria-hidden="true" class="home__stats">
+      @for (placeholder of [1, 2, 3]; track placeholder) {
+        <div class="fam-skeleton fam-skeleton--card"></div>
+      }
+    </div>
+  } @else {
+    <div class="home__stats">
+      <section class="fam-card fam-rise stat" [style.--i]="0">
+        <h2 class="stat__label">Open</h2>
+        <p class="stat__value">{{ tasks.openTasks().length }}</p>
+      </section>
+      <section class="fam-card fam-rise stat" [style.--i]="1">
+        <h2 class="stat__label">Done</h2>
+        <p class="stat__value stat__value--positive">{{ tasks.doneTasks().length }}</p>
+      </section>
+      <section class="fam-card fam-rise stat" [style.--i]="2">
+        <h2 class="stat__label">Estimated work left</h2>
+        <p class="stat__value">{{ workLeft() }}</p>
+      </section>
+    </div>
+
+    <section class="fam-card fam-appear home__oldest">
+      <h2 class="fam-subheading home__oldest-title">Waiting longest</h2>
+      @if (oldest(); as task) {
+        <p class="home__oldest-task">{{ task.title }}</p>
+        <p class="home__oldest-age">Added {{ task.age }}</p>
+      } @else {
+        <p class="home__oldest-age">Nothing is waiting.</p>
+      }
+      <a [routerLink]="tasksUrl" class="home__go" mat-flat-button>
+        <mat-icon>checklist</mat-icon>
+        Go to tasks
+      </a>
+    </section>
+  }
+</div>

@@ -1,0 +1,41 @@
+<div class="login">
+  <main class="login__card fam-card fam-appear">
+    <header class="login__brand">
+      <img alt="" class="login__mark" height="56" src="/favicon.svg" width="56">
+      <h1 class="login__name">{{ appName }}</h1>
+      <p class="login__tagline">Sign in to continue</p>
+    </header>
+    <form #form="ngForm" (ngSubmit)="signIn()" class="login__form">
+      <mat-form-field [hideRequiredMarker]="true">
+        <mat-label>Email</mat-label>
+        <input #emailField="ngModel" (ngModelChange)="email.set($event)" [ngModel]="email()"
+               autocomplete="username" matInput maxlength="254" name="email" required type="email">
+        <mat-icon matSuffix>person</mat-icon>
+        @if (emailField.hasError('required')) {
+          <mat-error>Email is required.</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field [hideRequiredMarker]="true">
+        <mat-label>Password</mat-label>
+        <input #passwordField="ngModel" (ngModelChange)="password.set($event)" [ngModel]="password()"
+               [type]="hidePassword() ? 'password' : 'text'" autocomplete="current-password" matInput
+               maxlength="128" name="password" required>
+        <button (click)="togglePassword($event)"
+                [attr.aria-label]="hidePassword() ? 'Show password' : 'Hide password'"
+                [attr.aria-pressed]="!hidePassword()" mat-icon-button matSuffix type="button">
+          <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (passwordField.hasError('required')) {
+          <mat-error>Password is required.</mat-error>
+        }
+      </mat-form-field>
+      @if (errorMessage()) {
+        <p class="login__error" role="alert">{{ errorMessage() }}</p>
+      }
+      <button [disabled]="!form.form.valid || isSigningIn()" class="fam-action" mat-flat-button type="submit">
+        {{ isSigningIn() ? 'Signing in…' : 'Sign in' }}
+      </button>
+    </form>
+  </main>
+  <p class="login__version">Version {{ version }}</p>
+</div>

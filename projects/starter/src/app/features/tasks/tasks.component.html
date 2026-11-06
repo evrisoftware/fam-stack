@@ -1,0 +1,71 @@
+<fam-load-status [busy]="tasks.isLoading()" loading="Loading tasks…" ready="Tasks ready."/>
+
+<div [attr.aria-busy]="tasks.isLoading()" class="fam-page tasks">
+  @if (tasks.isLoading()) {
+    <div aria-hidden="true" class="tasks__list">
+      @for (placeholder of [1, 2, 3]; track placeholder) {
+        <div class="fam-skeleton fam-skeleton--row"></div>
+      }
+    </div>
+  } @else if (isEmpty()) {
+    <div class="fam-empty fam-appear">
+      <div class="fam-empty__icon">
+        <mat-icon aria-hidden="true">checklist</mat-icon>
+      </div>
+      <h2 class="fam-empty__title">No tasks yet</h2>
+      <p class="fam-empty__hint">Add the first one. Everyone signed in sees it at once.</p>
+    </div>
+  } @else {
+    @for (section of sections(); track section.id) {
+      <section [attr.aria-labelledby]="section.id + '-tasks'" class="tasks__section">
+        <h2 [id]="section.id + '-tasks'" class="fam-subheading tasks__heading">
+          {{ section.label }} <span [class]="'fam-chip ' + section.chip">{{ section.rows.length }}</span>
+        </h2>
+        @if (section.rows.length === 0) {
+          <p class="tasks__quiet">{{ section.emptyHint }}</p>
+        }
+        <ul class="tasks__list">
+          @for (row of section.rows; track row.task.id) {
+            <li [class.task--done]="row.task.done" [style.--i]="$index" class="fam-card fam-rise task">
+              <mat-checkbox (change)="setDone(row.task, $event.checked)" [checked]="row.task.done"
+                            [disabled]="isPending(row.task)" class="task__check">
+                <span class="task__title">{{ row.title }}</span>
+              </mat-checkbox>
+              <div class="task__body">
+                @if (row.notes) {
+                  <p class="task__notes">{{ row.notes }}</p>
+                }
+                <p class="task__meta">
+                  @if (row.estimate) {
+                    <span class="fam-chip">
+                      <mat-icon aria-hidden="true">schedule</mat-icon>{{ row.estimate }}
+                    </span>
+                  }
+                  <span>{{ row.meta }}</span>
+                </p>
+              </div>
+              <div class="task__actions">
+                <button (click)="edit(row.task)" [attr.aria-label]="'Edit ' + row.title"
+                        [disabled]="isPending(row.task)" class="fam-tonal" mat-mini-fab title="Edit" type="button">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button (click)="remove(row.task)" [attr.aria-label]="'Delete ' + row.title"
+                        [disabled]="isPending(row.task)" class="fam-tonal--danger" mat-mini-fab title="Delete"
+                        type="button">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+  }
+</div>
+
+<div class="fam-floating">
+  <button (click)="edit()" class="fam-fab" extended mat-fab type="button">
+    <mat-icon>add</mat-icon>
+    New task
+  </button>
+</div>

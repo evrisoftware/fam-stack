@@ -1,0 +1,55 @@
+@use '../styles/mixins';
+
+/* One 44 × 64 px pill split into two buttons. */
+:host {
+  flex: none;
+  display: inline-flex;
+}
+
+.text-scale {
+  display: grid;
+  overflow: hidden;
+  color: var(--fam-scale-ink, var(--fam-ink));
+  background: var(--fam-scale-bg, var(--fam-surface-2));
+  border-radius: var(--fam-radius-pill);
+  box-shadow: inset 0 0 0 1px var(--fam-scale-line, var(--fam-line));
+}
+
+.text-scale__button {
+  width: 44px;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: grid;
+  cursor: pointer;
+  color: inherit;
+  place-items: center;
+  background: transparent;
+  transition: background var(--fam-dur-fast) var(--fam-ease-out);
+}
+
+.text-scale__button + .text-scale__button {
+  box-shadow: inset 0 1px 0 var(--fam-scale-line, var(--fam-line));
+}
+
+.text-scale__button:hover:not(:disabled) {
+  background: var(--fam-scale-hover, var(--fam-surface-3));
+}
+
+.text-scale__button:focus-visible {
+  @include mixins.focus-ring(-3px, currentcolor);
+}
+
+/* A disabled half dims and keeps its size. */
+.text-scale__button:disabled {
+  opacity: .38;
+  cursor: default;
+}
+
+.text-scale__button .mat-icon {
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  font-size: 20px;
+}

@@ -1,0 +1,31 @@
+<form (ngSubmit)="save()" class="task-form">
+  <div aria-hidden="true" class="task-form__handle"></div>
+  <h2 class="task-form__title" mat-dialog-title>{{ editing ? 'Edit task' : 'New task' }}</h2>
+  <mat-dialog-content class="task-form__body">
+    <mat-form-field>
+      <mat-label>Title</mat-label>
+      <input (ngModelChange)="title.set($event)" [maxlength]="titleMax" [ngModel]="title()"
+             autocomplete="off" matInput name="title" required>
+      <mat-hint align="end">{{ title().length }} / {{ titleMax }}</mat-hint>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Notes</mat-label>
+      <textarea (ngModelChange)="notes.set($event)" [maxlength]="notesMax" [ngModel]="notes()"
+                matInput name="notes" rows="3"></textarea>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Estimate</mat-label>
+      <input (ngModelChange)="estimateText.set($event)" [famNumberDecimals]="0" [famNumberMax]="estimateMax"
+             [ngModel]="estimateText()" autocomplete="off" famNumberFormat inputmode="numeric" matInput
+             name="estimate">
+      <span matTextSuffix>min</span>
+      <mat-hint>Optional. Leave it empty if nobody knows yet.</mat-hint>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions class="task-form__actions">
+    <button mat-button mat-dialog-close type="button">Cancel</button>
+    <button [disabled]="!canSave()" class="fam-action" mat-flat-button type="submit">
+      {{ editing ? 'Save' : 'Add task' }}
+    </button>
+  </mat-dialog-actions>
+</form>

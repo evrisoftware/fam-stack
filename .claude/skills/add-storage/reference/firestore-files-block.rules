@@ -1,0 +1,41 @@
+    /* A file record's fields. Limits mirror FILE_* in features/files/stored-file.ts, looser. */
+    function fileShapeOk(file) {
+      return file.keys().hasOnly(['name', 'contentType', 'size', 'createdAt', 'createdBy'])
+        && file.keys().hasAll(['name', 'contentType', 'size', 'createdAt', 'createdBy'])
+        && file.name is string && file.name.size() > 0 && file.name.size() <= 400
+        && file.contentType in ['image/png', 'image/jpeg', 'image/webp']
+        && file.size is int && file.size >= 0 && file.size <= 11 * 1024 * 1024;
+    }
+
+    /* Keep one of the two blocks below, the one matching the path chosen in storage.rules. */
+
+    /* Shared: file records, one per object in Storage's `files/`. */
+    match /files/{fileId} {
+      allow read: if isSignedIn();
+
+      /* The id is a UUID v7, the same as the object's name. */
+      allow create: if isSignedIn()
+        && fileId.matches('^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$')
+        && fileShapeOk(request.resource.data)
+        && stampedBySelf(request.resource.data.createdBy)
+        && clockOk(request.resource.data.createdAt);
+
+      /* A record is never edited: a new file is a new record. */
+      allow update: if false;
+      allow delete: if isSignedIn();
+    }
+
+    /* Owner-only: each account's records, one per object in Storage's `users/{uid}/files/`. */
+    match /users/{uid}/files/{fileId} {
+      allow read, delete: if isOwner(uid);
+
+      /* The id is a UUID v7, the same as the object's name. */
+      allow create: if isOwner(uid)
+        && fileId.matches('^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$')
+        && fileShapeOk(request.resource.data)
+        && stampedBySelf(request.resource.data.createdBy)
+        && clockOk(request.resource.data.createdAt);
+
+      /* A record is never edited: a new file is a new record. */
+      allow update: if false;
+    }

@@ -1,0 +1,36 @@
+/* Self-hosted fonts: `roboto.woff2` (variable) and the full `material-icons.woff2` under `$base`. */
+@mixin fonts($base: '/fonts') {
+  @font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 300 700;
+    font-display: swap;
+    src: url('#{$base}/roboto.woff2') format('woff2');
+  }
+
+  @font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    /* Icons stay invisible until the font loads. */
+    font-display: block;
+    src: url('#{$base}/material-icons.woff2') format('woff2');
+  }
+
+  /* The `.material-icons` ligature class that `mat-icon` uses. */
+  .material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
+}

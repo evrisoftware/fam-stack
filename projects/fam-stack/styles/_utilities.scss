@@ -1,0 +1,243 @@
+@use 'mixins';
+
+/* Global `.fam-*` classes: layout, motion, loading and empty states, notes, chips. */
+@mixin utilities() {
+  /* A page inside the shell, in the shell's column (`--fam-page-max-w`). */
+  .fam-page {
+    @include mixins.centred-column;
+    padding: var(--fam-space-4) 0 7rem;
+  }
+
+  /* Hidden visually, kept for screen readers. */
+  .fam-visually-hidden {
+    @include mixins.visually-hidden;
+  }
+
+  /* `[famScrollRegion]`'s inward focus ring. */
+  .fam-scroll-region:focus-visible {
+    @include mixins.focus-ring(-2px);
+  }
+
+  /* A card on the page background. */
+  .fam-card {
+    background: var(--fam-card);
+    border-radius: var(--fam-radius-md);
+    box-shadow: var(--fam-shadow-1);
+  }
+
+  .fam-heading {
+    margin: 0;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--fam-ink);
+    font-family: var(--fam-font-display);
+  }
+
+  .fam-subheading {
+    margin: 0;
+    font-weight: 600;
+    color: var(--fam-ink);
+    font-family: var(--fam-font-display);
+  }
+
+  /* Entrance for content once its data is ready. */
+  .fam-appear {
+    animation: fam-rise var(--fam-dur-slow) var(--fam-ease-out) backwards;
+  }
+
+  /* Staggered list entrance; set `[style.--i]="$index"`. */
+  .fam-rise {
+    animation: fam-rise var(--fam-dur-slow) var(--fam-ease-out) backwards;
+    animation-delay: calc(min(var(--i, 0), 8) * 45ms);
+  }
+
+  @keyframes fam-rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px) scale(.99);
+    }
+  }
+
+  /* Loading placeholders; wrap them `aria-hidden`. */
+  .fam-skeleton {
+    border-radius: var(--fam-radius-md);
+    background: linear-gradient(100deg, var(--fam-surface-2) 40%, var(--fam-surface-1) 50%, var(--fam-surface-2) 60%);
+    background-size: 200% 100%;
+    animation: fam-shimmer 1.4s linear infinite;
+  }
+
+  .fam-skeleton--title {
+    height: 2.2rem;
+    max-width: 16rem;
+  }
+
+  .fam-skeleton--card {
+    height: 8rem;
+  }
+
+  .fam-skeleton--row {
+    height: 3.4rem;
+    margin-bottom: var(--fam-space-2);
+  }
+
+  /* A responsive grid of cards. */
+  .fam-card-grid {
+    display: grid;
+    gap: var(--fam-space-4);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+  }
+
+  @keyframes fam-shimmer {
+    to {
+      background-position: -200% 0;
+    }
+  }
+
+  /* An advisory line in the warning tint. No margin. */
+  .fam-note {
+    padding: var(--fam-space-2) var(--fam-space-3);
+    border-radius: var(--fam-radius-sm);
+    background: var(--fam-tint-warning);
+    font-weight: 600;
+    font-size: var(--fam-text-sm);
+    color: var(--fam-ink-warning);
+  }
+
+  /* Empty state: icon, title and hint, centred. */
+  .fam-empty {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: var(--fam-space-1);
+    padding: 2.5rem var(--fam-space-4);
+  }
+
+  .fam-empty__icon {
+    width: 4.5rem;
+    height: 4.5rem;
+    display: grid;
+    place-content: center;
+    border-radius: 50%;
+    margin-bottom: var(--fam-space-2);
+    color: var(--mat-sys-on-secondary-container);
+    background: var(--mat-sys-secondary-container);
+    animation: fam-float 3.6s var(--fam-ease-out) infinite;
+  }
+
+  .fam-empty__icon .mat-icon {
+    width: auto;
+    height: auto;
+    font-size: 2.4rem;
+  }
+
+  @keyframes fam-float {
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  .fam-empty__title {
+    margin: 0;
+    font-weight: 600;
+    color: var(--fam-ink);
+    font-family: var(--fam-font-display);
+    font-size: var(--fam-text-xl);
+  }
+
+  /* Smaller titles for h3 and h4. */
+  h3.fam-empty__title {
+    font-size: var(--fam-text-lg);
+  }
+
+  h4.fam-empty__title {
+    font-size: var(--fam-text-md);
+  }
+
+  .fam-empty__hint {
+    margin: 0;
+    font-size: var(--fam-text-md);
+    color: var(--fam-ink-soft);
+  }
+
+  h4.fam-empty__title + .fam-empty__hint {
+    font-size: var(--fam-text-sm);
+  }
+
+  /* A status pill. */
+  .fam-chip {
+    flex: none;
+    gap: var(--fam-space-1);
+    display: inline-flex;
+    align-items: center;
+    height: 1.75rem;
+    padding: 0 .625rem;
+    line-height: 1;
+    white-space: nowrap;
+    font-weight: 600;
+    font-size: var(--fam-text-sm);
+    border-radius: var(--fam-radius-pill);
+    color: var(--fam-ink-soft);
+    background: var(--fam-surface-2);
+  }
+
+  .fam-chip .mat-icon {
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+  }
+
+  .fam-chip--positive {
+    color: var(--fam-ink-positive);
+    background: var(--fam-tint-positive);
+  }
+
+  .fam-chip--warning {
+    color: var(--fam-ink-warning);
+    background: var(--fam-tint-warning);
+  }
+
+  .fam-chip--danger {
+    color: var(--fam-ink-danger);
+    background: var(--fam-tint-danger);
+  }
+
+  /* The armed state of a two-tap confirmation. */
+  .fam-armed {
+    animation: fam-pulse 1s var(--fam-ease-out) infinite;
+  }
+
+  @keyframes fam-pulse {
+    50% {
+      box-shadow: 0 0 0 8px color-mix(in srgb, var(--mat-sys-primary) 18%, transparent);
+    }
+  }
+
+  /* A horizontal shake. */
+  @keyframes fam-shake {
+    20% {
+      translate: -6px 0;
+    }
+    40% {
+      translate: 5px 0;
+    }
+    60% {
+      translate: -3px 0;
+    }
+    80% {
+      translate: 2px 0;
+    }
+  }
+
+  /* Floating actions above the bottom nav, in their own transition group. */
+  .fam-floating {
+    right: var(--fam-space-3);
+    bottom: calc(var(--fam-bottom-nav-h) + env(safe-area-inset-bottom) + var(--fam-space-3));
+    z-index: 1000;
+    position: fixed;
+    display: grid;
+    gap: var(--fam-space-4);
+    grid-auto-flow: column;
+    animation: fam-rise var(--fam-dur-slow) var(--fam-ease-out) backwards;
+    view-transition-name: fam-floating;
+  }
+}

@@ -1,0 +1,89 @@
+rules_version = '2';
+
+/* fam-stack starter: every collection has its own block; there is no catch-all. */
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null && request.auth.uid != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function serverNow() {
+      return request.time.toMillis();
+    }
+
+    /* A device time within 5 min ahead and 7 days behind server time. */
+    function clockOk(ms) {
+      return ms is int
+        && ms <= serverNow() + 5 * 60 * 1000
+        && ms >= serverNow() - 7 * 24 * 60 * 60 * 1000;
+    }
+
+    /* A `{uid, email}` stamp naming the writing account. */
+    function stampedBySelf(user) {
+      return user is map
+        && user.keys().hasOnly(['uid', 'email'])
+        && user.uid == request.auth.uid
+        && user.email is string;
+    }
+
+    /* Tasks shared by every signed-in account. Limits mirror TASK_* in features/tasks/task.ts, looser. */
+    match /tasks/{taskId} {
+      function taskShapeOk(task) {
+        return task.keys().hasOnly(['title', 'notes', 'estimate', 'done', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy'])
+          && task.keys().hasAll(['title', 'notes', 'estimate', 'done', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy'])
+          && task.title is string && task.title.size() > 0 && task.title.size() <= 200
+          && task.notes is string && task.notes.size() <= 1000
+          && (task.estimate == null || (task.estimate is int && task.estimate >= 0 && task.estimate <= 9999))
+          && task.done is bool;
+      }
+
+      allow read: if isSignedIn();
+
+      /* The id is a UUID v7. */
+      allow create: if isSignedIn()
+        && taskId.matches('^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$')
+        && taskShapeOk(request.resource.data)
+        && stampedBySelf(request.resource.data.createdBy)
+        && stampedBySelf(request.resource.data.updatedBy)
+        && clockOk(request.resource.data.createdAt)
+        && request.resource.data.updatedAt == request.resource.data.createdAt;
+
+      /* `createdAt`/`createdBy` immutable; `updatedAt` strictly increases. */
+      allow update: if isSignedIn()
+        && taskShapeOk(request.resource.data)
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.createdBy == resource.data.createdBy
+        && stampedBySelf(request.resource.data.updatedBy)
+        && request.resource.data.updatedAt is int
+        && request.resource.data.updatedAt > resource.data.updatedAt
+        && request.resource.data.updatedAt <= serverNow() + 5 * 60 * 1000;
+
+      allow delete: if isSignedIn();
+    }
+
+    /*
+     * Sign-in history (`LoginHistoryService`), owner-only. Never deleted; an update may not
+     * shorten the list and, under 50 entries, must keep every existing one.
+     */
+    match /loginHistory/{uid} {
+      function trailShapeOk() {
+        return request.resource.data.keys().hasOnly(['uid', 'logins'])
+          && request.resource.data.uid == uid
+          && request.resource.data.logins is list
+          && request.resource.data.logins.size() <= 60;
+      }
+
+      allow read: if isOwner(uid);
+      allow create: if isOwner(uid) && trailShapeOk();
+      allow update: if isOwner(uid) && trailShapeOk()
+        && request.resource.data.logins.size() >= resource.data.logins.size()
+        && (resource.data.logins.size() >= 50
+          || request.resource.data.logins.hasAll(resource.data.logins));
+      allow delete: if false;
+    }
+  }
+}

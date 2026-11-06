@@ -1,0 +1,51 @@
+@use '@angular/material' as mat;
+@use 'fam-stack/styles' as fam;
+
+/* The Material theme; `color-scheme: light dark` follows the device. */
+html {
+  color-scheme: light dark;
+  @include mat.theme((
+    color: (
+      primary: mat.$cyan-palette,
+      tertiary: mat.$orange-palette,
+      theme-type: color-scheme
+    ),
+    typography: Roboto,
+    density: 0
+  ));
+}
+
+@include fam.fonts('/fonts');
+@include fam.global();
+
+/* The account menu, styled globally because it renders in an overlay. */
+.account-menu .account-menu__user {
+  display: flex;
+  gap: var(--fam-space-2);
+  align-items: center;
+  padding: var(--fam-space-3) var(--fam-space-4);
+  font-weight: 600;
+  color: var(--fam-ink);
+}
+
+.account-menu .account-menu__setting {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--fam-space-4);
+  padding: var(--fam-space-2) var(--fam-space-4) 0;
+  font-size: var(--fam-text-sm);
+  color: var(--fam-ink-soft);
+}
+
+.account-menu .account-menu__version {
+  padding: var(--fam-space-2) var(--fam-space-4);
+  font-size: var(--fam-text-xs);
+  color: var(--fam-ink-soft);
+}
+
+.account-menu .account-menu__danger {
+  @include mat.menu-overrides((
+    item-label-text-color: var(--fam-color-danger),
+    item-icon-color: var(--fam-color-danger),
+  ));
+}

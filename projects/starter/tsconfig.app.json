@@ -1,0 +1,23 @@
+/* The starter compiles the library from SOURCE (`fam-stack/*` below), so a change
+ * there shows up on the next rebuild with no `build:lib` in between. An app outside
+ * this workspace imports the same specifiers from node_modules instead. */
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/starter",
+    "types": [],
+    "resolveJsonModule": true,
+    "paths": {
+      "fam-stack": ["../fam-stack/src/public-api.ts"],
+      "fam-stack/*": ["../fam-stack/*/public-api.ts"],
+      "@app/*": ["./src/app/*"],
+      "@envs/*": ["./src/environments/*"]
+    }
+  },
+  "files": [
+    "src/main.ts"
+  ],
+  "include": [
+    "src/**/*.d.ts"
+  ]
+}

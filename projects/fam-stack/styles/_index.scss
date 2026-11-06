@@ -1,0 +1,33 @@
+/*
+ * fam-stack/styles.
+ *
+ *   @use '@angular/material' as mat;
+ *   @use 'fam-stack/styles' as fam;
+ *
+ *   html {
+ *     color-scheme: light;   // or `light dark` to follow the device
+ *     @include mat.theme((color: (primary: mat.$azure-palette), typography: Roboto, density: 0));
+ *   }
+ *   @include fam.fonts('/fonts');
+ *   @include fam.global();
+ *
+ * `global()` emits tokens, base, Material adjustments and utilities. The mixins emit nothing.
+ */
+@forward 'mixins';
+@forward 'tokens';
+@forward 'base';
+@forward 'material';
+@forward 'utilities';
+@forward 'fonts';
+
+@use 'tokens';
+@use 'base';
+@use 'material';
+@use 'utilities';
+
+@mixin global($root: 'app-root') {
+  @include tokens.tokens();
+  @include base.base($root);
+  @include material.material-overrides();
+  @include utilities.utilities();
+}

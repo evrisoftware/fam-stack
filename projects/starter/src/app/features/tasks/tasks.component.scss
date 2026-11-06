@@ -1,0 +1,88 @@
+:host {
+  display: block;
+}
+
+.tasks {
+  display: grid;
+  gap: var(--fam-space-6);
+}
+
+.tasks__section {
+  display: grid;
+  gap: var(--fam-space-3);
+}
+
+.tasks__heading {
+  display: flex;
+  gap: var(--fam-space-2);
+  align-items: center;
+  font-size: var(--fam-text-lg);
+}
+
+.tasks__quiet {
+  margin: 0;
+  color: var(--fam-ink-soft);
+}
+
+.tasks__list {
+  display: grid;
+  gap: var(--fam-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Checkbox, title and actions on the first row; notes and meta below. */
+.task {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--fam-space-1) var(--fam-space-2);
+  padding: var(--fam-space-2) var(--fam-space-3) var(--fam-space-3) var(--fam-space-1);
+}
+
+.task__check {
+  min-width: 0;
+}
+
+.task__title {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.task--done .task__title {
+  color: var(--fam-ink-soft);
+  text-decoration: line-through;
+}
+
+.task__body {
+  grid-column: 1;
+  display: grid;
+  gap: var(--fam-space-2);
+  padding-left: calc(var(--fam-space-7) + var(--fam-space-3));
+}
+
+.task__notes {
+  margin: 0;
+  color: var(--fam-ink);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.task__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--fam-space-2);
+  align-items: center;
+  margin: 0;
+  font-size: var(--fam-text-sm);
+  color: var(--fam-ink-soft);
+}
+
+.task__actions {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: flex;
+  gap: var(--fam-space-2);
+  align-items: start;
+  padding-top: var(--fam-space-1);
+}

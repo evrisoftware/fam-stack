@@ -1,0 +1,10 @@
+--- a/projects/fam-stack/firebase/errors.ts
++++ b/projects/fam-stack/firebase/errors.ts
+@@ -8,3 +8,7 @@
+ /** Whether Firestore's security rules refused the operation. */
+ export const isPermissionDenied = (error: unknown): boolean =>
+   firebaseErrorCode(error) === 'permission-denied';
++
++/** Whether Storage's security rules refused the operation. */
++export const isStorageUnauthorized = (error: unknown): boolean =>
++  firebaseErrorCode(error) === 'storage/unauthorized';

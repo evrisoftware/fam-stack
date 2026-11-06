@@ -1,0 +1,66 @@
+<div class="shell">
+  <header class="shell__header">
+    <mat-toolbar class="toolbar">
+      <a [routerLink]="homeUrl" class="brand">
+        <img alt="" class="brand__mark" height="28" src="/favicon.svg" width="28">
+        <span class="brand__name">{{ appName }}</span>
+      </a>
+      <button #account="matMenuTrigger" [matMenuTriggerFor]="accountMenu" aria-label="Account"
+              class="toolbar__button" mat-icon-button title="Account" type="button">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+    </mat-toolbar>
+    <fam-link-banner/>
+  </header>
+
+  <main [class.shell__body--centered]="screen()?.centersContent" class="shell__body">
+    @if (screen(); as current) {
+      <h1 [class]="current.showsName ? 'fam-heading fam-appear shell__title' : 'fam-visually-hidden'">{{ current.label }}</h1>
+    } @else {
+      <h1 class="fam-visually-hidden">{{ appName }}</h1>
+    }
+    <router-outlet/>
+  </main>
+
+  <fam-bottom-nav [links]="links"/>
+</div>
+
+<fam-live-note [text]="textScaleNote()"/>
+
+<mat-menu #accountMenu="matMenu" class="account-menu" xPosition="before">
+  @if (auth.currentUser(); as user) {
+    <div class="account-menu__user">
+      <mat-icon aria-hidden="true">account_circle</mat-icon>
+      <span>{{ user.email | emailName }}</span>
+    </div>
+  }
+  <!-- stopPropagation keeps the menu open. -->
+  <div class="account-menu__setting">
+    <span>{{ text.textScale.group }}</span>
+    <span>{{ textScale.label() }}</span>
+  </div>
+  <button (click)="$event.stopPropagation(); textScale.grow()" [disabled]="!textScale.canGrow()"
+          mat-menu-item type="button">
+    <mat-icon>text_increase</mat-icon>
+    <span>{{ text.textScale.grow }}</span>
+  </button>
+  <button (click)="$event.stopPropagation(); textScale.shrink()" [disabled]="!textScale.canShrink()"
+          mat-menu-item type="button">
+    <mat-icon>text_decrease</mat-icon>
+    <span>{{ text.textScale.shrink }}</span>
+  </button>
+  <button (click)="$event.stopPropagation(); reconnect.reconnect()" [disabled]="reconnect.busy()"
+          [title]="text.link.reconnectHint" mat-menu-item type="button">
+    <mat-icon>sync</mat-icon>
+    <span>{{ reconnect.label() }}</span>
+  </button>
+  <button (click)="account.closeMenu(); openSecurity()" mat-menu-item type="button">
+    <mat-icon>security</mat-icon>
+    <span>Session &amp; security</span>
+  </button>
+  <button (click)="account.closeMenu(); signOut()" class="account-menu__danger" mat-menu-item type="button">
+    <mat-icon>logout</mat-icon>
+    <span>Sign out</span>
+  </button>
+  <div class="account-menu__version">{{ appName }} v{{ version }}</div>
+</mat-menu>

@@ -1,0 +1,15 @@
+/* The library's own build (ng-packagr). Entry points import each other by package
+ * name (`fam-stack/core`), which ng-packagr resolves to the entry it built first. */
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/lib",
+    "declaration": true,
+    "declarationMap": true,
+    "inlineSources": true,
+    "types": []
+  },
+  "exclude": [
+    "**/*.spec.ts"
+  ]
+}

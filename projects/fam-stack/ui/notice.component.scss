@@ -1,0 +1,145 @@
+@use '@angular/material' as mat;
+
+:host {
+  display: block;
+}
+
+/* The three voices, each setting both container and text colour from `--fam-voice-*`. */
+.fam-voice-success {
+  @include mat.snack-bar-overrides((
+    container-color: var(--fam-voice-success),
+    supporting-text-color: var(--fam-on-voice-success),
+    supporting-text-weight: 700,
+    supporting-text-size: var(--fam-text-lg),
+  ));
+}
+
+.fam-voice-warning {
+  @include mat.snack-bar-overrides((
+    container-color: var(--fam-voice-warning),
+    supporting-text-color: var(--fam-on-voice-warning),
+    supporting-text-weight: 700,
+    supporting-text-size: var(--fam-text-lg),
+  ));
+}
+
+.fam-voice-danger {
+  @include mat.snack-bar-overrides((
+    container-color: var(--fam-voice-danger),
+    supporting-text-color: var(--fam-on-voice-danger),
+    supporting-text-weight: 700,
+    supporting-text-size: var(--fam-text-lg),
+  ));
+}
+
+/* The stack, in its own stacking context. */
+.notice {
+  position: relative;
+  isolation: isolate;
+}
+
+/* The current message, ringed in its own ink. */
+.notice-pill {
+  position: relative;
+  z-index: 2;
+  overflow: clip;
+  border-radius: var(--mat-snack-bar-container-shape, var(--mat-sys-corner-extra-small));
+  background-color: var(--mat-snack-bar-container-color, var(--mat-sys-inverse-surface));
+  color: var(--mat-snack-bar-supporting-text-color, var(--mat-sys-inverse-on-surface));
+  outline: 2px solid currentColor;
+  transition: color var(--fam-dur-med) var(--fam-ease-out);
+}
+
+.notice-pill__words {
+  position: relative;
+}
+
+.notice-pill__text {
+  display: block;
+}
+
+.notice-pill__text--arriving {
+  animation: fam-notice-arrive var(--fam-dur-med) var(--fam-ease-out) both;
+}
+
+/* The previous message, rolled up and out; at least the pill's height. */
+.notice-pill__face {
+  position: absolute;
+  inset: 0 0 auto;
+  min-height: 100%;
+  box-sizing: border-box;
+  padding: inherit;
+  background-color: var(--mat-snack-bar-container-color, var(--mat-sys-inverse-surface));
+  color: var(--mat-snack-bar-supporting-text-color, var(--mat-sys-inverse-on-surface));
+  animation: fam-notice-depart var(--fam-dur-med) var(--fam-ease-out) forwards;
+}
+
+/* A waiting message, one blurred line under the pill. */
+.notice-peek {
+  position: absolute;
+  z-index: 1;
+  top: calc(100% - var(--fam-space-2));
+  inset-inline: var(--fam-space-3);
+  height: calc(var(--fam-space-2) + var(--fam-text-sm) * 1.4);
+  overflow: clip;
+  border-radius: var(--mat-snack-bar-container-shape, var(--mat-sys-corner-extra-small));
+  background-color: var(--mat-snack-bar-container-color, var(--mat-sys-inverse-surface));
+  color: var(--mat-snack-bar-supporting-text-color, var(--mat-sys-inverse-on-surface));
+  outline: 2px solid currentColor;
+  box-shadow: var(--fam-shadow-1);
+  animation: fam-notice-tuck var(--fam-dur-med) var(--fam-ease-out) both;
+  transition: inset-inline var(--fam-dur-med) var(--fam-ease-out),
+  height var(--fam-dur-med) var(--fam-ease-out);
+}
+
+.notice-peek--later {
+  z-index: 0;
+  inset-inline: var(--fam-space-6);
+  height: calc(var(--fam-space-2) * 2 + var(--fam-text-sm) * 1.4);
+}
+
+.notice-peek--rising {
+  animation: fam-notice-rise var(--fam-dur-med) var(--fam-ease-out) forwards;
+}
+
+/* Blurred so it cannot be read. */
+.notice-peek__text {
+  display: block;
+  padding-top: var(--fam-space-2);
+  padding-inline: var(--fam-space-4);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-family: var(--mat-snack-bar-supporting-text-font, var(--mat-sys-body-medium-font));
+  font-size: var(--fam-text-sm);
+  font-weight: 600;
+  line-height: 1.4;
+  filter: blur(3px);
+}
+
+@keyframes fam-notice-tuck {
+  from {
+    opacity: 0;
+    translate: 0 calc(-1 * var(--fam-space-4));
+  }
+}
+
+@keyframes fam-notice-rise {
+  to {
+    opacity: 0;
+    translate: 0 calc(-1 * var(--fam-space-5));
+  }
+}
+
+@keyframes fam-notice-depart {
+  to {
+    translate: 0 -100%;
+  }
+}
+
+@keyframes fam-notice-arrive {
+  from {
+    opacity: 0;
+    translate: 0 var(--fam-space-3);
+  }
+}

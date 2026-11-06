@@ -1,0 +1,79 @@
+@use '../styles/mixins';
+
+:host {
+  display: block;
+}
+
+.bottom-nav {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  background: var(--fam-surface-1);
+  border-top: 1px solid var(--fam-line-soft);
+  padding: var(--fam-space-1) var(--fam-space-2) calc(var(--fam-space-1) + env(safe-area-inset-bottom));
+  box-shadow: var(--fam-shadow-up);
+  /* Its own view-transition group. */
+  view-transition-name: fam-nav;
+}
+
+.bottom-nav__item {
+  display: grid;
+  gap: .18rem;
+  justify-items: center;
+  align-content: center;
+  padding: var(--fam-space-1) 0;
+  text-decoration: none;
+  color: var(--fam-ink-soft);
+  transition: color var(--fam-dur-fast) var(--fam-ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The label under the icon. */
+.bottom-nav__label {
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: .01em;
+  font-size: var(--fam-text-xs);
+}
+
+/* The active indicator is the icon wrapper's background. */
+.bottom-nav__icon {
+  display: grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 1.95rem;
+  border-radius: var(--fam-radius-pill);
+  transition: background-color var(--fam-dur-med) var(--fam-ease-out),
+  transform var(--fam-dur-med) var(--fam-ease-out);
+}
+
+.bottom-nav__icon .mat-icon {
+  font-size: 1.65rem;
+  width: 1.65rem;
+  height: 1.65rem;
+}
+
+.bottom-nav__item--active {
+  color: var(--mat-sys-primary);
+}
+
+/* The active indicator colour. */
+.bottom-nav__item--active .bottom-nav__icon {
+  color: var(--mat-sys-on-secondary-container);
+  background: var(--mat-sys-secondary-container);
+}
+
+.bottom-nav__item:active .bottom-nav__icon {
+  transform: scale(.9);
+}
+
+/* The focus ring goes on the indicator. */
+.bottom-nav__item:focus-visible {
+  outline: none;
+}
+
+.bottom-nav__item:focus-visible .bottom-nav__icon {
+  @include mixins.focus-ring;
+}

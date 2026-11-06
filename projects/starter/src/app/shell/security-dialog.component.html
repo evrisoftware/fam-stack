@@ -1,0 +1,56 @@
+<h2 class="security__title" mat-dialog-title>
+  <mat-icon aria-hidden="true">security</mat-icon>
+  <span>Session &amp; security</span>
+</h2>
+<mat-dialog-content class="security">
+  <section class="security__current">
+    <mat-icon aria-hidden="true" class="security__device-icon">{{ sessionIcon }}</mat-icon>
+    <div class="security__identity">
+      <span class="security__label">Signed in on this device</span>
+      <span class="security__name">{{ user?.email | emailName }}</span>
+      <span class="security__meta">
+        {{ session.device }}
+        @if (session.startTime) {
+          · since {{ session.startTime | date: 'short' }}
+        }
+      </span>
+    </div>
+    <span class="fam-chip fam-chip--positive">Active</span>
+  </section>
+
+  <h3 class="fam-subheading security__section-title">Recent sign-ins</h3>
+  <fam-load-status [busy]="isLoading()" [failed]="loadFailed()"
+                   loading="Loading the sign-in history…" ready="Sign-in history ready."/>
+  @if (isLoading()) {
+    <div aria-hidden="true">
+      <div class="fam-skeleton fam-skeleton--row"></div>
+      <div class="fam-skeleton fam-skeleton--row"></div>
+    </div>
+  } @else if (logins().length === 0) {
+    <div class="fam-empty">
+      <div class="fam-empty__icon">
+        <mat-icon aria-hidden="true">history</mat-icon>
+      </div>
+      <h4 class="fam-empty__title">No sign-ins recorded yet</h4>
+      <p class="fam-empty__hint">The next sign-ins to this account will appear here.</p>
+    </div>
+  } @else {
+    <ul class="security__list">
+      @for (login of logins(); track login.uuid) {
+        <li [style.--i]="$index" class="security__login fam-rise">
+          <mat-icon aria-hidden="true">{{ login.icon }}</mat-icon>
+          <div class="security__login-body">
+            <span class="security__login-time">{{ login.time | date: 'medium' }}</span>
+            <span class="security__meta">{{ login.device }}</span>
+          </div>
+          @if (login.isThisDevice) {
+            <span class="fam-chip">This device</span>
+          }
+        </li>
+      }
+    </ul>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close type="button">Close</button>
+</mat-dialog-actions>

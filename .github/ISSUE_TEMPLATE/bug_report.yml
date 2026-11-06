@@ -1,0 +1,49 @@
+name: Bug report
+description: Something in fam-stack itself behaves wrongly.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        A security problem? Don't open an issue: report it privately, as
+        [SECURITY.md](https://github.com/evrisoftware/fam-stack/blob/main/.github/SECURITY.md) says.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce it
+      description: Steps on the starter against the emulators (`npm run emulators`, `npm run seed`, `npm start`), if you can.
+      placeholder: |
+        1. Sign in as demo@example.com.
+        2. …
+    validations:
+      required: true
+  - type: dropdown
+    id: unmodified
+    attributes:
+      label: Does it happen on an unmodified clone of this repository?
+      description: Copies drift on purpose; a bug that lives only in one is fixed in that copy.
+      options:
+        - Yes, on an unmodified clone
+        - Only in my copy
+        - I have not tried
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Where
+      description: Browser and OS, Node version, and the commit of the original your code comes from.
+      placeholder: Chrome on Android, Node 26.13, main at abc1234
+  - type: textarea
+    id: logs
+    attributes:
+      label: Console output
+      description: Errors from the browser console or the terminal.
+      render: text

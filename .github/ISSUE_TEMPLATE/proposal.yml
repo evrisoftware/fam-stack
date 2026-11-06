@@ -1,0 +1,18 @@
+name: Proposal
+description: A change to the layer, the rules, the starter, the skills or the docs.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What fails or is missing today, and in what kind of app. A failure you have seen weighs more than a feature you might want.
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: The change
+      description: What you would change, and where (entry point, rule, file). If copies of the template would want it, it comes with a recipe in `docs/changes/`.
+    validations:
+      required: true

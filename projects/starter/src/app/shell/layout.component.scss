@@ -1,0 +1,81 @@
+@use '@angular/material' as mat;
+@use 'fam-stack/styles' as fam;
+
+:host {
+  display: block;
+  height: 100%;
+}
+
+/* header · scrollable body · persistent bottom nav */
+.shell {
+  height: 100%;
+  display: grid;
+  overflow: hidden;
+  grid-template-rows: auto 1fr auto;
+}
+
+.shell__header {
+  z-index: 10;
+  position: relative;
+  /* Its own view-transition group. */
+  view-transition-name: fam-header;
+}
+
+.toolbar {
+  @include mat.toolbar-overrides((
+    container-background-color: var(--mat-sys-primary),
+    container-text-color: var(--mat-sys-on-primary),
+  ));
+  display: flex;
+  height: auto;
+  justify-content: space-between;
+  padding: var(--fam-space-2) var(--fam-space-2) var(--fam-space-2) var(--fam-space-4);
+}
+
+.brand {
+  display: inline-flex;
+  gap: var(--fam-space-2);
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--fam-radius-sm);
+}
+
+.brand:focus-visible {
+  @include fam.focus-ring(3px, currentColor);
+}
+
+.brand__mark {
+  border-radius: 7px;
+  box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--mat-sys-on-primary) 60%, transparent);
+}
+
+.brand__name {
+  font-family: var(--fam-font-display);
+  font-size: var(--fam-text-xl);
+  font-weight: 700;
+  letter-spacing: .01em;
+}
+
+.toolbar__button {
+  color: inherit;
+}
+
+/* The scrolling body; its gutter is padding, not a width. */
+.shell__body {
+  overflow: auto;
+  padding-inline: max(var(--fam-space-3), 1.5%);
+  view-transition-name: fam-page;
+}
+
+/* The centred column width, shared by the page and its heading. */
+.shell__body--centered {
+  --fam-page-max-w: 60rem;
+}
+
+.shell__title {
+  @include fam.centred-column;
+  padding-top: var(--fam-space-4);
+  margin-bottom: var(--fam-space-2);
+  font-size: var(--fam-text-2xl);
+}

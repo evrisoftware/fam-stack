@@ -1,0 +1,29 @@
+<fam-load-status [busy]="files.isLoading()" loading="Loading files…" ready="Files ready."/>
+
+<div class="fam-page">
+  <input #picker (change)="pick(picker)" accept="image/png,image/jpeg,image/webp" aria-hidden="true"
+         class="fam-visually-hidden" tabindex="-1" type="file">
+  @if (!uploading()) {
+    <button (click)="picker.click()" mat-flat-button type="button">
+      <mat-icon aria-hidden="true">upload</mat-icon> Add a file
+    </button>
+  } @else {
+    <mat-progress-bar [attr.aria-label]="cancellable() ? 'Uploading' : 'Saving'" [value]="percent()"
+                      mode="determinate"/>
+    @if (cancellable()) {
+      <button (click)="cancel()" mat-button type="button">Cancel upload</button>
+    }
+  }
+
+  <ul [attr.aria-busy]="files.isLoading()">
+    @for (row of rows(); track row.file.id) {
+      <li class="fam-card">
+        <app-file-preview [alt]="row.name" [file]="row.file"/>
+        <span>{{ row.name }} · {{ row.size }}</span>
+        <button (click)="remove(row.file)" [attr.aria-label]="'Delete ' + row.name" mat-icon-button type="button">
+          <mat-icon aria-hidden="true">delete</mat-icon>
+        </button>
+      </li>
+    }
+  </ul>
+</div>

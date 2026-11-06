@@ -1,0 +1,10 @@
+/* Partial compilation, the form a package takes when a team publishes its copy privately. */
+{
+  "extends": "./tsconfig.lib.json",
+  "compilerOptions": {
+    "declarationMap": false
+  },
+  "angularCompilerOptions": {
+    "compilationMode": "partial"
+  }
+}

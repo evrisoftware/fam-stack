@@ -1,0 +1,94 @@
+/*
+ * Design tokens on `:root`. Surfaces and ink follow the Material theme; the semantic
+ * voices use `light-dark()`. Override them on `:root` after `@include fam.global()`.
+ */
+@mixin tokens() {
+  :root {
+    /* Ink and surfaces, from the Material theme. */
+    --fam-ink: var(--mat-sys-on-surface);
+    --fam-ink-soft: var(--mat-sys-on-surface-variant);
+    --fam-ink-faint: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+    /* The page behind cards, and the card on it, per scheme. */
+    --fam-page: light-dark(var(--mat-sys-surface-container), var(--mat-sys-surface));
+    --fam-card: light-dark(var(--mat-sys-surface-container-lowest), var(--mat-sys-surface-container));
+    /* Quiet insets inside a card, lightest first. */
+    --fam-surface-1: var(--mat-sys-surface-container-low);
+    --fam-surface-2: var(--mat-sys-surface-container-high);
+    --fam-surface-3: var(--mat-sys-surface-container-highest);
+    --fam-line: var(--mat-sys-outline-variant);
+    --fam-line-soft: color-mix(in srgb, var(--mat-sys-outline-variant) 55%, transparent);
+
+    /* Semantic voices: positive, warning and danger, with tints and inks. */
+    --fam-color-positive: light-dark(#146C43, #7DDC9F);
+    --fam-on-positive: light-dark(#FFFFFF, #00391C);
+    --fam-color-warning: light-dark(#FFB703, #FFCB4D);
+    --fam-on-warning: light-dark(#4A1500, #3D1A00);
+    --fam-color-danger: var(--mat-sys-error);
+    --fam-on-danger: var(--mat-sys-on-error);
+    --fam-tint-positive: color-mix(in srgb, var(--fam-color-positive) 14%, var(--mat-sys-surface));
+    --fam-tint-warning: color-mix(in srgb, var(--fam-color-warning) 24%, var(--mat-sys-surface));
+    --fam-tint-danger: color-mix(in srgb, var(--fam-color-danger) 12%, var(--mat-sys-surface));
+    /* Ink on a tint. */
+    --fam-ink-positive: color-mix(in srgb, var(--fam-color-positive) 70%, var(--mat-sys-on-surface));
+    --fam-ink-warning: light-dark(#6B2E00, #FFDCA8);
+    --fam-ink-danger: color-mix(in srgb, var(--fam-color-danger) 80%, var(--mat-sys-on-surface));
+
+    /* Snackbar voices (`NotificationService`). */
+    --fam-voice-success: light-dark(#0B5D35, #7DDC9F);
+    --fam-on-voice-success: light-dark(#F4FFF7, #00391C);
+    --fam-voice-warning: var(--fam-color-warning);
+    --fam-on-voice-warning: var(--fam-on-warning);
+    --fam-voice-danger: light-dark(#8C1D18, #FFB4AB);
+    --fam-on-voice-danger: light-dark(#FFF5F4, #690005);
+
+    /* Type, in rem. */
+    --fam-font-body: 'Roboto', system-ui, sans-serif;
+    --fam-font-display: var(--fam-font-body);
+    --fam-text-xs: .75rem;
+    --fam-text-sm: .875rem;
+    --fam-text-md: 1rem;
+    --fam-text-lg: 1.125rem;
+    --fam-text-xl: 1.375rem;
+    --fam-text-2xl: 1.75rem;
+    --fam-text-3xl: 2.25rem;
+    /* Set on <html> by `TextScaleService`. */
+    --fam-text-scale: 1;
+
+    /* Shape. */
+    --fam-radius-sm: 10px;
+    --fam-radius-md: 16px;
+    --fam-radius-lg: 22px;
+    --fam-radius-pill: 999px;
+
+    /* Spacing: a 4 px grid, in px. */
+    --fam-space-1: 4px;
+    --fam-space-2: 8px;
+    --fam-space-3: 12px;
+    --fam-space-4: 16px;
+    --fam-space-5: 20px;
+    --fam-space-6: 24px;
+    --fam-space-7: 32px;
+
+    /* Minimum control size, and the primary action's height. */
+    --fam-tap-min: 44px;
+    --fam-action-h: 56px;
+    /* The bottom nav's height without the safe-area inset. */
+    --fam-bottom-nav-h: 4.4rem;
+
+    /* Elevation. */
+    --fam-shadow-1: 0 1px 2px rgb(0 0 0 / 8%), 0 2px 8px rgb(0 0 0 / 6%);
+    --fam-shadow-2: 0 4px 10px rgb(0 0 0 / 10%), 0 10px 28px rgb(0 0 0 / 8%);
+    /* Upward shadow for a bar pinned to the bottom. */
+    --fam-shadow-up: 0 -6px 22px rgb(0 0 0 / 7%);
+
+    /* Motion. */
+    --fam-ease-out: cubic-bezier(.22, 1, .36, 1);
+    --fam-ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+    --fam-dur-fast: 120ms;
+    --fam-dur-med: 240ms;
+    --fam-dur-slow: 360ms;
+    /* Route change: old page out, then new page in. */
+    --fam-vt-out: 300ms;
+    --fam-vt-in: 600ms;
+  }
+}

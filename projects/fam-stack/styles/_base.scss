@@ -1,0 +1,101 @@
+/* Document base: heights, text size, safe areas, button press, view transitions, reduced motion. `$root` is the app's root selector. */
+@mixin base($root: 'app-root') {
+  html,
+  body {
+    height: 100%;
+  }
+
+  /* The reader's text size, relative to the browser's default. */
+  html {
+    font-size: calc(100% * var(--fam-text-scale, 1));
+  }
+
+  #{$root} {
+    display: block;
+    height: 100%;
+  }
+
+  /* Safe-area padding except the bottom, which the bottom nav and sheets carry. */
+  body {
+    margin: 0;
+    box-sizing: border-box;
+    overflow: clip;
+    color: var(--fam-ink);
+    background: var(--fam-page);
+    font-family: var(--fam-font-body);
+    font-optical-sizing: auto;
+    touch-action: manipulation;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--fam-ink-faint) transparent;
+  }
+
+  /* Press feedback on enabled buttons. */
+  button {
+    transition: scale var(--fam-dur-fast) var(--fam-ease-out);
+  }
+
+  button:not(:disabled):active {
+    scale: .96;
+  }
+
+  /* Route change (`famViewTransitions()`): the old page fades up and out, then the new one rises. */
+  ::view-transition-group(fam-page),
+  ::view-transition-group(fam-floating) {
+    animation-duration: calc(var(--fam-vt-out) + var(--fam-vt-in));
+    animation-timing-function: var(--fam-ease-out);
+  }
+
+  ::view-transition-old(fam-page),
+  ::view-transition-old(fam-floating) {
+    animation: fam-vt-page-out var(--fam-vt-out) var(--fam-ease-out) both;
+  }
+
+  ::view-transition-new(fam-page),
+  ::view-transition-new(fam-floating) {
+    animation: fam-vt-page-in var(--fam-vt-in) var(--fam-ease-out) both;
+    animation-delay: var(--fam-vt-out);
+  }
+
+  ::view-transition-group(fam-header) {
+    z-index: 1;
+  }
+
+  @keyframes fam-vt-page-out {
+    to {
+      opacity: 0;
+      translate: 0 -10px;
+    }
+  }
+
+  @keyframes fam-vt-page-in {
+    from {
+      opacity: 0;
+      translate: 0 18px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* Every animation runs once in 1 ms. */
+    *,
+    *::before,
+    *::after {
+      animation-delay: 0ms !important;
+      animation-duration: 1ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 1ms !important;
+    }
+
+    /* The view-transition pseudo-elements, which `*` does not match. */
+    ::view-transition-group(*),
+    ::view-transition-image-pair(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation-delay: 0ms !important;
+      animation-duration: 1ms !important;
+    }
+  }
+}

@@ -1,0 +1,169 @@
+@use '@angular/material' as mat;
+
+/* App-wide Material adjustments: shapes, button heights, snackbars, dialog presets, actions and FABs. */
+
+/* One palette for both `mat-fab` and `mat-mini-fab` (`fab-small` tokens). */
+@mixin fab-palette($container, $foreground, $ripple) {
+  @include mat.fab-overrides((
+    container-color: $container,
+    foreground-color: $foreground,
+    ripple-color: $ripple,
+  ));
+  & {
+    --mat-fab-small-container-color: #{$container};
+    --mat-fab-small-foreground-color: #{$foreground};
+    --mat-fab-small-ripple-color: #{$ripple};
+  }
+}
+
+@mixin material-overrides() {
+  html {
+    @include mat.dialog-overrides((
+      container-shape: var(--fam-radius-lg),
+    ));
+    @include mat.card-overrides((
+      elevated-container-shape: var(--fam-radius-md),
+      outlined-container-shape: var(--fam-radius-md),
+    ));
+    @include mat.menu-overrides((
+      container-shape: var(--fam-radius-md),
+    ));
+    @include mat.form-field-overrides((
+      outlined-container-shape: var(--fam-radius-sm),
+    ));
+    @include mat.button-overrides((
+      filled-container-height: var(--fam-tap-min),
+      outlined-container-height: var(--fam-tap-min),
+      protected-container-height: var(--fam-tap-min),
+      text-container-height: var(--fam-tap-min),
+    ));
+  }
+
+  /* Snackbar margin, including the top safe-area inset. */
+  .cdk-overlay-pane .mat-mdc-snack-bar-container {
+    margin: var(--fam-space-2);
+    margin-top: calc(var(--fam-space-2) + env(safe-area-inset-top));
+  }
+
+  /* Snackbars let pointer events through to what is under them. */
+  .cdk-overlay-pane:has(.mat-mdc-snack-bar-container),
+  .mat-mdc-snack-bar-container {
+    pointer-events: none;
+  }
+
+  /* A ring in the snackbar's own ink. */
+  .mat-mdc-snackbar-surface {
+    outline: 2px solid currentColor;
+  }
+
+  /* `NoticeComponent`'s surface: box and shadow only. */
+  .cdk-overlay-pane .fam-notice-snack-bar .mat-mdc-snackbar-surface {
+    padding: 0;
+    background-color: transparent;
+    outline: none;
+  }
+
+  /* Short dialog bodies: no scrollbar, block padding. */
+  .fam-dialog-body.mat-mdc-dialog-content {
+    overflow: hidden;
+    padding-block: var(--fam-space-3);
+  }
+
+  /* `FULL_SCREEN_DIALOG_CONFIG`: square corners, a surface that fills the pane as a flex column. */
+  .fam-full-screen .mat-mdc-dialog-surface {
+    border-radius: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* `SHEET_DIALOG_CONFIG`: rounded top corners, bottom safe-area padding, slides in from below. */
+  .fam-sheet .mat-mdc-dialog-surface {
+    border-radius: var(--fam-radius-lg) var(--fam-radius-lg) 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+    transform: translateY(100%);
+    transition: transform var(--mat-dialog-transition-duration, 0ms) var(--fam-ease-out);
+  }
+
+  .fam-sheet .mdc-dialog--open .mat-mdc-dialog-surface {
+    transform: none;
+  }
+
+  .fam-sheet .mdc-dialog--closing .mat-mdc-dialog-surface {
+    transform: translateY(100%);
+  }
+
+  .mat-mdc-form-field-icon-suffix > .mat-icon {
+    padding: 2px;
+  }
+
+  /* The primary action (`mat-flat-button.fam-action`): at least 56 px tall, grows with a wrapped label. */
+  .fam-action {
+    @include mat.button-overrides((
+      filled-container-height: var(--fam-action-h),
+      filled-container-shape: var(--fam-radius-md),
+      filled-label-text-font: var(--fam-font-display),
+      filled-label-text-size: var(--fam-text-lg),
+      filled-label-text-weight: 700,
+      filled-horizontal-padding: var(--fam-space-6),
+    ));
+  }
+
+  .mat-mdc-unelevated-button.fam-action {
+    height: auto;
+    min-height: var(--fam-action-h);
+    padding-block: var(--fam-space-2);
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .fam-action--positive {
+    @include mat.button-overrides((
+      filled-container-color: var(--fam-color-positive),
+      filled-label-text-color: var(--fam-on-positive),
+    ));
+  }
+
+  .fam-action--warning {
+    @include mat.button-overrides((
+      filled-container-color: var(--fam-color-warning),
+      filled-label-text-color: var(--fam-on-warning),
+    ));
+  }
+
+  .fam-action--danger {
+    @include mat.button-overrides((
+      filled-container-color: var(--fam-color-danger),
+      filled-label-text-color: var(--fam-on-danger),
+    ));
+  }
+
+  /* A FAB in the primary colour (`mat-fab` or `mat-mini-fab`). */
+  .fam-fab {
+    @include fab-palette(var(--mat-sys-primary), var(--mat-sys-on-primary), rgb(255 255 255 / 35%));
+  }
+
+  /* Tonal `mat-mini-fab`: 44 px, no elevation, a tint with matching ink. */
+  .mat-mdc-mini-fab.fam-tonal,
+  .mat-mdc-mini-fab.fam-tonal--warning,
+  .mat-mdc-mini-fab.fam-tonal--danger {
+    width: var(--fam-tap-min);
+    height: var(--fam-tap-min);
+    --mat-fab-small-container-elevation-shadow: none;
+    --mat-fab-small-hover-container-elevation-shadow: none;
+    --mat-fab-small-focus-container-elevation-shadow: none;
+    --mat-fab-small-pressed-container-elevation-shadow: none;
+    --mat-fab-small-container-color: var(--fam-surface-2);
+    --mat-fab-small-foreground-color: var(--fam-ink);
+  }
+
+  .mat-mdc-mini-fab.fam-tonal--warning {
+    --mat-fab-small-container-color: var(--fam-tint-warning);
+    --mat-fab-small-foreground-color: var(--fam-ink-warning);
+  }
+
+  .mat-mdc-mini-fab.fam-tonal--danger {
+    --mat-fab-small-container-color: var(--fam-tint-danger);
+    --mat-fab-small-foreground-color: var(--fam-ink-danger);
+  }
+}

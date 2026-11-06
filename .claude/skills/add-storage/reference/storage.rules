@@ -1,0 +1,41 @@
+rules_version = '2';
+
+/* Every path has its own block; there is no catch-all, so any other path is denied. */
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isSignedIn() {
+      return request.auth != null && request.auth.uid != null;
+    }
+
+    /* A new object: within the size limit, of an allowed type, stamped with its uploader. */
+    function uploadOk(maxBytes, types) {
+      return request.resource.size <= maxBytes
+        && request.resource.contentType in types
+        && request.resource.metadata.uid == request.auth.uid;
+    }
+
+    /* Keep one of the two blocks below, the one matching the copy's choice. */
+
+    /*
+     * Files shared by every signed-in account, one object per record in `files`.
+     * Limits mirror FILE_* in features/files/stored-file.ts, looser. Objects are never replaced.
+     */
+    match /files/{fileId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn()
+        && fileId.matches('^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$')
+        && uploadOk(11 * 1024 * 1024, ['image/png', 'image/jpeg', 'image/webp']);
+      allow update: if false;
+      allow delete: if isSignedIn();
+    }
+
+    /* The owner-only variant: each account reads and deletes only its own files. */
+    match /users/{uid}/files/{fileId} {
+      allow read, delete: if isSignedIn() && request.auth.uid == uid;
+      allow create: if isSignedIn() && request.auth.uid == uid
+        && fileId.matches('^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$')
+        && uploadOk(11 * 1024 * 1024, ['image/png', 'image/jpeg', 'image/webp']);
+      allow update: if false;
+    }
+  }
+}

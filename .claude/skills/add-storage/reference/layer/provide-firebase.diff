@@ -1,0 +1,77 @@
+--- a/projects/fam-stack/firebase/provide-firebase.ts
++++ b/projects/fam-stack/firebase/provide-firebase.ts
+@@ -15,6 +15,7 @@
+   initializeAuth
+ } from 'firebase/auth';
+ import {connectFirestoreEmulator, Firestore, FirestoreSettings, initializeFirestore} from 'firebase/firestore';
++import {connectStorageEmulator, FirebaseStorage, getStorage} from 'firebase/storage';
+ import {FamSession, LinkTransport, LoginHistoryStore} from 'fam-stack/backend';
+ import {firebaseSession} from './firebase-session';
+ import {firestoreLinkTransport} from './firestore-link';
+@@ -23,9 +24,13 @@
+ /** The Firebase `Auth` instance. `Firestore` is injected by its own class. */
+ export const FIREBASE_AUTH = new InjectionToken<Auth>('FIREBASE_AUTH');
+ 
++/** The Cloud Storage instance for the config's `storageBucket`. */
++export const FIREBASE_STORAGE = new InjectionToken<FirebaseStorage>('FIREBASE_STORAGE');
++
+ interface OpenedFirebase {
+   readonly auth: Auth;
+   readonly firestore: Firestore;
++  readonly storage: FirebaseStorage;
+ }
+ 
+ const FIREBASE = new InjectionToken<OpenedFirebase>('FIREBASE');
+@@ -49,6 +54,8 @@
+   readonly auth?: string;
+   /** The Firestore emulator's address, e.g. `{host: '127.0.0.1', port: 8080}`. */
+   readonly firestore?: {readonly host: string; readonly port: number};
++  /** The Storage emulator's address, e.g. `{host: '127.0.0.1', port: 9199}`. */
++  readonly storage?: {readonly host: string; readonly port: number};
+ }
+ 
+ export interface ProvideFirebaseOptions {
+@@ -60,11 +67,12 @@
+ /* Instances already connected to an emulator. */
+ const emulated = new WeakSet<object>();
+ 
+-/* Opens the app, then auth, then Firestore, and connects emulators once per instance. */
++/* Opens the app, then auth, Firestore and Storage, and connects emulators once per instance. */
+ const openFirebase = (config: FirebaseOptions, options: ProvideFirebaseOptions): OpenedFirebase => {
+   const app = initializeApp(config);
+   const auth = initializeAuth(app, {persistence: AUTH_PERSISTENCE});
+   const firestore = initializeFirestore(app, options.firestore ?? DEFAULT_FIRESTORE_SETTINGS);
++  const storage = getStorage(app);
+   const {emulators} = options;
+   if (emulators?.auth && !emulated.has(auth)) {
+     emulated.add(auth);
+@@ -74,13 +82,17 @@
+     emulated.add(firestore);
+     connectFirestoreEmulator(firestore, emulators.firestore.host, emulators.firestore.port);
+   }
+-  return {auth, firestore};
++  if (emulators?.storage && !emulated.has(storage)) {
++    emulated.add(storage);
++    connectStorageEmulator(storage, emulators.storage.host, emulators.storage.port);
++  }
++  return {auth, firestore, storage};
+ };
+ 
+ /**
+- * Opens Firebase in an environment initializer and provides `FIREBASE_AUTH`, `Firestore`
+- * and, over them, `fam-stack/backend`'s contracts. The only opener: never call `getAuth()`
+- * or `getFirestore()`.
++ * Opens Firebase in an environment initializer and provides `FIREBASE_AUTH`, `Firestore`,
++ * `FIREBASE_STORAGE` and, over them, `fam-stack/backend`'s contracts. The only opener: never
++ * call `getAuth()`, `getFirestore()` or `getStorage()`.
+  */
+ export const provideFirebase = (config: FirebaseOptions, options: ProvideFirebaseOptions = {}): EnvironmentProviders =>
+   makeEnvironmentProviders([
+@@ -88,6 +100,7 @@
+     provideEnvironmentInitializer(() => void inject(FIREBASE)),
+     {provide: FIREBASE_AUTH, useFactory: () => inject(FIREBASE).auth},
+     {provide: Firestore, useFactory: () => inject(FIREBASE).firestore},
++    {provide: FIREBASE_STORAGE, useFactory: () => inject(FIREBASE).storage},
+     {provide: FamSession, useFactory: () => firebaseSession(inject(FIREBASE).auth)},
+     {provide: LinkTransport, useFactory: () => firestoreLinkTransport(inject(FIREBASE).firestore)},
+     {provide: LoginHistoryStore, useFactory: () => firestoreLoginHistory(inject(FIREBASE).firestore)}
