@@ -102,13 +102,14 @@ rest of Firebase.
 | `fam-stack/styles` | Tokens on top of Material's own theme (dark mode included), base, Material adjustments, utility classes. |
 
 And around it: strict Firebase Hosting headers (CSP `script-src 'self'`, HSTS, COOP…),
-Firestore rules that name every collection, emulator-first development, vitest specs, a
-headless-Chrome smoke test, a GitHub Actions workflow running `npm run verify`, and context
-for [Claude Code](https://code.claude.com).
+Firestore rules that name every collection and their tests against the emulator,
+emulator-first development, vitest specs, a headless-Chrome smoke test, a GitHub Actions
+workflow running `npm run verify` and the rules tests, and context for
+[Claude Code](https://code.claude.com).
 
 ## Try the starter (no Firebase project needed)
 
-Requires Node `^22.22.3`, `^24.15.0` or `>=26` (26 is what `.nvmrc` pins), the
+Requires Node `^24.15.0` or `>=26` (26 is what `.nvmrc` pins), the
 [Firebase CLI](https://firebase.google.com/docs/cli) and Java 21 or later (for the Firestore
 emulator).
 
@@ -200,8 +201,10 @@ is no merge to fight. In Claude Code, ask to "check fam-stack for new changes" (
 | `npm run build` | The starter's production build |
 | `npm test` | Library specs (vitest) |
 | `npm run check:entries` | The layer's import direction, and the Firebase SDK kept to `fam-stack/firebase` and `provideFamStack` |
-| `npm run verify` | Entry check + library build + starter build + specs |
+| `npm run lint` | ESLint with angular-eslint: selector prefixes, signal APIs, control flow, template accessibility |
+| `npm run verify` | Entry check + lint + library build + starter build + specs |
 | `npm run smoke` | End-to-end in headless Chrome against the emulators |
+| `npm run rules:test` | `firestore.rules` against the Firestore emulator: what each collection accepts and refuses |
 | `npm run deploy` | Production build, then deploy it to Firebase Hosting only — rules ship separately (set `.firebaserc` and `environment.ts` first) |
 | `npm run rules:deploy` | `firestore.rules` and `firestore.indexes.json` together, to the project in `.firebaserc` |
 
@@ -238,15 +241,15 @@ On the original's roadmap:
 - pick-list rotation and toggle styles
 - retention purges
 - skills for adding Functions, Messaging and App Check
-- the smoke test and the rules checked in CI (today CI runs `npm run verify` only)
+- the smoke test in CI (today CI runs `npm run verify` and the rules tests)
 
-## Contributing
+## Maintenance
 
-Bug reports, fixes and recipes are welcome here, in the original.
-[CONTRIBUTING](.github/CONTRIBUTING.md) covers the setup, the gate and when a change needs a
-recipe, and everyone taking part follows the [Code of Conduct](.github/CODE_OF_CONDUCT.md).
-Report a security problem privately, as [SECURITY](.github/SECURITY.md) says, never in an
-issue.
+fam-stack is open source: copy it, change it and ship it under the license below. The
+original is maintained by its author and does not take pull requests; what it fixes reaches
+copies as recipes in [`docs/changes/`](docs/changes/README.md). A bug in the original can be
+reported as an issue. Report a security problem privately, as
+[SECURITY](.github/SECURITY.md) says, never in an issue.
 
 ## License
 

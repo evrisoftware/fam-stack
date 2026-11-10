@@ -29,4 +29,6 @@ paths:
   (`fam-header`, `fam-nav`, `fam-floating`).
 - Infinite animations end at rest under `prefers-reduced-motion`.
 - Icons: classic Material Icons ligatures.
+- A replaced font file takes a new name, updated in `_fonts.scss`: Hosting serves `/fonts/**`
+  as `immutable` for a year. No `.js` or `.css` in `public/` for the same reason.
 - `anyComponentStyle` budget is 8 kB; group repetition before raising it.

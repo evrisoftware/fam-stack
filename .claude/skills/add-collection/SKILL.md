@@ -24,6 +24,8 @@ Reference implementation: `projects/starter/src/app/features/tasks/`.
 - `stampedBySelf(...)`; identity fields immutable on update; times via `clockOk(...)`.
 - `updatedAt` strictly increasing when stale copies are refused.
 - `delete` only if the feature deletes; owner-only data uses `isOwner(uid)`.
+- A `describe('<collection>')` in `scripts/firestore-rules.test.mjs`, shaped like `tasks`:
+  per operation, each refusal first and the accepted write last.
 
 ## 3. Service (`<feature>/<things>.service.ts`)
 
@@ -46,6 +48,7 @@ destructive actions; editing in a `SHEET_DIALOG_CONFIG` sheet that closes with a
 
 ## 6. Verify
 
-- `npm run verify`, then `npm run emulators` + `npm start` + `npm run smoke`.
+- `npm run verify`, then `npm run emulators` + `npm run rules:test`, and `npm start` +
+  `npm run smoke`.
 - Exercise the screen against the emulator; add a step to `scripts/smoke.mjs` for a main flow.
 - `npm run rules:deploy` only when asked.

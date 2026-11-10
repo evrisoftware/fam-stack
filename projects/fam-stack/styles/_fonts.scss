@@ -1,4 +1,5 @@
-/* Self-hosted fonts: `roboto.woff2` (variable) and the full `material-icons.woff2` under `$base`. */
+/* Self-hosted fonts: `roboto.woff2` (variable) and the full `material-icons.woff2` under `$base`.
+ * Hosting caches them for a year as `immutable`: a replaced font takes a new file name. */
 @mixin fonts($base: '/fonts') {
   @font-face {
     font-family: 'Roboto';

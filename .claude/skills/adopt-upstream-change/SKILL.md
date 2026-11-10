@@ -46,7 +46,7 @@ say so and offer to record it as declined.
 
 - Run the recipe's **Check**.
 - Run the `verify` skill, plus the smoke test when the recipe touches auth, the shell, the
-  Firebase layer, rules or a flow.
+  Firebase layer, rules or a flow, and `npm run rules:test` when it touches `firestore.rules`.
 
 ## 5. Record
 

@@ -62,4 +62,6 @@ One sentence per cause, as in `task-errors.ts`: conflict, deleted, `permission-d
   immutable on update.
 - Limits looser than the app's.
 - Grant delete explicitly; append-only lists refuse shrinking updates.
-- Test against the emulator (`npm run smoke`) before `npm run rules:deploy`.
+- Every allow has cases in `scripts/firestore-rules.test.mjs`: what it accepts and each thing
+  it refuses, with the refusals asserted before the accepted write to the same id.
+- `npm run rules:test` and `npm run smoke` pass before `npm run rules:deploy`.

@@ -23,16 +23,26 @@ Node 26 (`.nvmrc`).
 - `npm run build`: the starter's production build to `dist/starter`.
 - `npm test`: vitest on `projects/fam-stack/**/*.spec.ts` (jsdom).
 - `npm run check:entries`: the layer's import direction and Firebase SDK boundary.
+- `npm run lint`: ESLint with angular-eslint on `projects/` (TypeScript, templates, specs).
 - `npm run smoke`: headless Chrome end-to-end against the emulators. Needs `npm run emulators`
   and `npm start`; clears the emulator's data. `BASE_URL`/`CHROME_PATH` override.
+- `npm run rules:test`: `firestore.rules` against the Firestore emulator (`node:test`), under
+  its own project id. Needs `npm run emulators`, or runs alone as
+  `firebase emulators:exec --project demo-fam-stack --only firestore "npm run rules:test"`.
 - `npm run deploy` / `npm run rules:deploy`: production. **Never run either unasked.**
 
 ## Verification gate
 
-- `npm run verify` (entry check + library build + starter dev build + tests) must pass before a commit.
+- `npm run verify` (entry check + lint + library build + starter dev build + tests) must pass
+  before a commit.
 - `npx tsc -p projects/starter/tsconfig.app.json --noEmit --rootDir projects` is faster but skips templates.
-- Run `npm run smoke` after touching auth, the shell, the Firebase layer or a starter flow.
-- No lint yet.
+- Run `npm run smoke` after touching auth, the shell, the Firebase layer, the rules or a
+  starter flow.
+- Run `npm run rules:test` after touching `firestore.rules`; a rule change comes with its
+  case in `scripts/firestore-rules.test.mjs`.
+- `npm run lint` (`eslint.config.mjs`) holds selector prefixes, signal APIs, `inject()`,
+  control flow, no `style=""`, template accessibility, public Angular API, the ban on
+  `@angular/fire`/`rxfire` and Firebase's openers kept to `provideFirebase`. An exception is an override there naming its file, never a disable comment.
 
 ## Always
 

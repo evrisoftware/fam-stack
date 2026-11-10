@@ -5,7 +5,8 @@ tools: Read, Grep, Glob, Bash
 color: cyan
 ---
 
-Review changes to fam-stack against what the build, `npm test` and `npm run smoke` do not check.
+Review changes to fam-stack against what the build, `npm test`,
+`npm run rules:test` and `npm run smoke` do not check.
 
 Start with `git diff` (or the given target). Read the changed files themselves, so the
 matching `.claude/rules/` load. Review what changed and what it makes reachable.

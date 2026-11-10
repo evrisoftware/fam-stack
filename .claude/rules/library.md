@@ -39,4 +39,8 @@ paths:
   package name (`fam-stack/core`).
 - A service over the backend contracts: a spec with fakes of them (`backend/link.service.spec.ts`,
   `auth/auth.service.spec.ts`).
+- A component or directive: a spec with a host component, read through the DOM
+  (`a11y/load-status.component.spec.ts`).
+- A service that listens on `window` or writes to `history`: the spec removes its listeners
+  and leaves the state as it found it (`ui/dialog-history.service.spec.ts`).
 - Anything needing a real Firestore: `npm run smoke`.

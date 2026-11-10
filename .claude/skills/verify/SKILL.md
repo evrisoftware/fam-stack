@@ -1,6 +1,6 @@
 ---
 name: verify
-description: Run fam-stack's verification — library build, starter build, unit tests, and (when the change reaches a user flow) the end-to-end smoke against the Firebase emulators. Use before a commit, before saying a change is done, or when asked to verify, test or check the workspace.
+description: Run fam-stack's verification — lint, library build, starter build, unit tests, and (when the change reaches a user flow) the end-to-end smoke against the Firebase emulators. Use before a commit, before saying a change is done, or when asked to verify, test or check the workspace.
 ---
 
 # Verify
@@ -8,10 +8,10 @@ description: Run fam-stack's verification — library build, starter build, unit
 ## Always
 
 ```bash
-npm run verify     # entry check + library build + starter dev build + vitest
+npm run verify     # entry check + lint + library build + starter dev build + vitest
 ```
 
-All four must pass. Report failures with their output.
+All five must pass. Report failures with their output.
 
 ## When the change reaches a flow
 
@@ -28,6 +28,15 @@ npm run smoke              # or: npm run smoke -- light   (or dark)
 - The `auth/wrong-password` console error is an expected step.
 - `BASE_URL` for another dev port, `CHROME_PATH` if Chrome is not found.
 - Afterwards stop both processes and check ports 8080, 9099, 4400 and the dev port are free.
+
+## When `firestore.rules` changed
+
+```bash
+npm run rules:test         # with `npm run emulators` running
+firebase emulators:exec --project demo-fam-stack --only firestore "npm run rules:test"   # or alone
+```
+
+Uses the project id `demo-fam-stack-rules`, so the starter's emulator data stays.
 
 ## Line endings
 

@@ -1,4 +1,5 @@
-# The verification gate on every push and pull request: entry check, library build, starter build, specs.
+# The verification gate on every push and pull request: entry check, lint, library build, starter build, specs.
+# A second job runs `firestore.rules` against the Firestore emulator.
 name: verify
 
 on:
@@ -19,3 +20,18 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run verify
+
+  rules:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: actions/setup-java@v6
+        with:
+          distribution: corretto
+          java-version: 25
+      - run: npm ci
+      - run: npx --yes firebase-tools@15 emulators:exec --project demo-fam-stack --only firestore "npm run rules:test"

@@ -27,7 +27,7 @@ Use AskUserQuestion for whatever the request has not already said:
 | `name`, `short_name`, `description`, `theme_color`, `background_color` | `projects/starter/public/manifest.webmanifest` |
 | `name` (slug), `version` back to `0.1.0`, `description` | root `package.json` |
 | Tab titles `· Starter` | `scripts/smoke.mjs` (`login tab title`, `404 tab title`) |
-| `demo-fam-stack` → `demo-<slug>` | `package.json` (`emulators`), `scripts/smoke.mjs`, `projects/starter/src/environments/environment.development.ts` (`projectId`, `authDomain`), the `npm start` line in `CLAUDE.md` |
+| `demo-fam-stack` → `demo-<slug>` | `package.json` (`emulators`), `scripts/smoke.mjs`, `scripts/firestore-rules.test.mjs` (`PROJECT_ID`), `.github/workflows/verify.yml`, `projects/starter/src/environments/environment.development.ts` (`projectId`, `authDomain`), the `npm start` and `rules:test` lines in `CLAUDE.md`, `.claude/skills/verify/SKILL.md` |
 | Production project | `.firebaserc` `default`; `environment.ts` gets the web app config from the Firebase console (Project settings → Your apps), or keeps its placeholders if "later" |
 
 For production, tell the user what only the Firebase console can do: enable Email/Password,
@@ -57,6 +57,7 @@ To remove `tasks` (and `home`, which summarises tasks):
   there if it was the home screen), its component in `shell/shell.routes.ts`, and
   `TasksService` in `shell/layout.component.ts` (provided there and loaded after `loadUser()`).
 - Delete its `match` block in `firestore.rules`. Any collection without a block stays denied.
+- Delete its `describe` in `scripts/firestore-rules.test.mjs`.
 - In `scripts/smoke.mjs`, remove the steps that use it, and point the post-login checks at
   the screen that is now first. Keep the sign-in, sign-out, 404 and stale-link steps.
 - The shell needs at least one screen: removing both, create the first real one with
@@ -69,9 +70,8 @@ To remove `tasks` (and `home`, which summarises tasks):
   fam-stack, with a link to the original, and keep the Commands table.
 - `LICENSE`: MIT requires keeping the original copyright notice. Add the user's own line
   above it; never delete it.
-- `.github/`: `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `ISSUE_TEMPLATE/` and
-  `pull_request_template.md` are the original's, with its contacts and links. Delete them, or
-  rewrite them for the product if it takes outside contributions. Keep `workflows/verify.yml`.
+- `.github/`: `SECURITY.md` and `ISSUE_TEMPLATE/` are the original's, with its contacts and
+  links. Delete them, or rewrite them for the product. Keep `workflows/verify.yml`.
 - Keep `docs/principles.md`, `docs/changes/` (its files mark which upstream recipes this copy
   already contains), `.claude/` and `CLAUDE.md`. Update `CLAUDE.md` where it now says something
   untrue (names, removed features in the Map).

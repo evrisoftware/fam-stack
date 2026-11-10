@@ -146,8 +146,10 @@ All business logic runs on the client, so `firestore.rules` is the only authorit
   owner can roll the list over with entries of their own; closing it needs the append in a
   Cloud Function, not a rule.
 
-**Held by.** The starter's `firestore.rules` (tasks, loginHistory). Test rules against the
-emulator before deploying them; they are not part of the build.
+**Held by.** The starter's `firestore.rules` (tasks, loginHistory) and
+`scripts/firestore-rules.test.mjs` (`npm run rules:test`), which states against the emulator
+what each allow accepts and refuses. The rules are not part of the build, so CI runs those
+tests beside it.
 
 ### 13. Nothing a client wrote is believed
 
@@ -264,3 +266,13 @@ reader's text size fills the furniture instead of rebuilding it.
 **off** (it emits `onload="this.media='all'"`). Fonts are self-hosted, so `font-src 'self'`;
 hashed `js|css` and fonts are `immutable`, the shell `no-cache`. **Held by** `firebase.json`
 and the starter's `angular.json`. The Hosting emulator does not apply headers.
+
+`immutable` for a year is only safe for a file whose name changes when its content does: a
+browser that has it never asks again.
+
+- **`js|css` come from the production build**, which hashes their names (`outputHashing:
+  all`), and the `no-cache` shell names the new ones. Never deploy a development build, and
+  never put a `.js` or `.css` in `public/`: it would have a fixed name.
+- **A font keeps its name, so a replaced font takes a new one** (`material-icons-v2.woff2`)
+  and `styles/_fonts.scss` points at it. Overwritten in place, the old file stays up to a
+  year in every browser that has it, and icons added since draw as their ligature text.
